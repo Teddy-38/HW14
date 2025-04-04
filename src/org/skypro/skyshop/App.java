@@ -1,25 +1,21 @@
 package org.skypro.skyshop;
 
-import org.skypro.skyshop.basket.ProductBasket; import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.basket.ProductBasket; import org.skypro.skyshop.product.DiscountedProduct; import org.skypro.skyshop.product.FixPriceProduct; import org.skypro.skyshop.product.SimpleProduct;
 
 public class App {
     public static void main(String[] args) {
         ProductBasket basket = new ProductBasket();
 
-        Product product1 = new Product("Яблоко", 100);
-        Product product2 = new Product("Банан", 90);
-        Product product3 = new Product("Апельсин", 80);
-        Product product4 = new Product("Киви", 70);
-        Product product5 = new Product("Груша", 60);
-        Product product6 = new Product("Вишня", 50);
+        SimpleProduct simpleProduct = new SimpleProduct("Яблоко", 50);
+        DiscountedProduct discountedProduct = new DiscountedProduct("Банан", 30, 10); // скидка 10%
+        FixPriceProduct fixPriceProduct = new FixPriceProduct("Апельсин");
 
-        basket.addProduct(product1);
-        basket.addProduct(product2);
-        basket.addProduct(product3);
-        basket.addProduct(product4);
-        basket.addProduct(product5);
+        basket.addProduct(simpleProduct);
+        basket.addProduct(discountedProduct);
+        basket.addProduct(fixPriceProduct);
 
-        basket.addProduct(product6);
+        basket.addProduct(new SimpleProduct("Киви", 70));
+        basket.addProduct(new SimpleProduct("Груша", 60));
 
         System.out.println("Содержимое корзины:");
         basket.printProducts();
@@ -27,7 +23,6 @@ public class App {
         System.out.println("Общая стоимость корзины: " + basket.getTotalPrice());
 
         System.out.println("Корзина содержит 'Яблоко': " + basket.containsProduct("Яблоко"));
-
         System.out.println("Корзина содержит 'Персик': " + basket.containsProduct("Персик"));
 
         basket.clearBasket();
@@ -36,8 +31,5 @@ public class App {
         basket.printProducts();
 
         System.out.println("Общая стоимость пустой корзины: " + basket.getTotalPrice());
-
-        System.out.println("Корзина содержит 'Яблоко': " + basket.containsProduct("Яблоко"));
     }
 }
-
