@@ -1,10 +1,12 @@
 package org.skypro.skyshop;
 
-import org.skypro.skyshop.basket.ProductBasket; import org.skypro.skyshop.product.DiscountedProduct; import org.skypro.skyshop.product.FixPriceProduct; import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.basket.ProductBasket; import org.skypro.skyshop.product.DiscountedProduct; import org.skypro.skyshop.product.FixPriceProduct; import org.skypro.skyshop.product.SimpleProduct; import org.skypro.skyshop.article.Article; import org.skypro.skyshop.search.SearchEngine;
+import org.skypro.skyshop.search.Searchable;
 
 public class App {
     public static void main(String[] args) {
         ProductBasket basket = new ProductBasket();
+        SearchEngine searchEngine = new SearchEngine(10);
 
         SimpleProduct simpleProduct = new SimpleProduct("Яблоко", 50);
         DiscountedProduct discountedProduct = new DiscountedProduct("Банан", 30, 10); // скидка 10%
@@ -14,22 +16,35 @@ public class App {
         basket.addProduct(discountedProduct);
         basket.addProduct(fixPriceProduct);
 
-        basket.addProduct(new SimpleProduct("Киви", 70));
-        basket.addProduct(new SimpleProduct("Груша", 60));
+        searchEngine.add(simpleProduct);
+        searchEngine.add(discountedProduct);
+        searchEngine.add(fixPriceProduct);
 
-        System.out.println("Содержимое корзины:");
-        basket.printProducts();
+        Article article1 = new Article("Обзор Яблок", "Яблоки содержат много витаминов и полезных веществ.");
+        Article article2 = new Article("Как выбрать бананы", "Бананы должны быть желтыми, без пятен.");
 
-        System.out.println("Общая стоимость корзины: " + basket.getTotalPrice());
+        searchEngine.add(article1);
+        searchEngine.add(article2);
 
-        System.out.println("Корзина содержит 'Яблоко': " + basket.containsProduct("Яблоко"));
-        System.out.println("Корзина содержит 'Персик': " + basket.containsProduct("Персик"));
+        System.out.println("Результаты поиска по 'яблоко':");
+        for (Searchable item : searchEngine.search("яблоко")) {
+            if (item != null) {
+                System.out.println(item.getStringRepresentation());
+            }
+        }
 
-        basket.clearBasket();
-        System.out.println("После очистки корзины:");
+        System.out.println("\nРезультаты поиска по 'банан':");
+        for (Searchable item : searchEngine.search("банан")) {
+            if (item != null) {
+                System.out.println(item.getStringRepresentation());
+            }
+        }
 
-        basket.printProducts();
-
-        System.out.println("Общая стоимость пустой корзины: " + basket.getTotalPrice());
+        System.out.println("\nРезультаты поиска по 'обзору':");
+        for (Searchable item : searchEngine.search("обзору")) {
+            if (item != null) {
+                System.out.println(item.getStringRepresentation());
+            }
+        }
     }
 }
