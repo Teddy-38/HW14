@@ -34,6 +34,11 @@ public final class Article implements Searchable {
     }
 
     @Override
+    public int getPrice() {
+        return 0;
+    }
+
+    @Override
     public String toString() {
         return title + "\n" + text;
     }

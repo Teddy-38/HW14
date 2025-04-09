@@ -10,4 +10,6 @@ public interface Searchable {
 
         return getName() + " — тип " + getContentType();
     }
+
+    int getPrice();
 }
