@@ -1,43 +1,42 @@
 package org.skypro.skyshop;
 
-import org.skypro.skyshop.basket.ProductBasket; import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.product.*;
+import org.skypro.skyshop.article.Article;
+import org.skypro.skyshop.search.SearchEngine;
+import org.skypro.skyshop.search.BestResultNotFound;
+import org.skypro.skyshop.search.Searchable;
 
 public class App {
     public static void main(String[] args) {
-        ProductBasket basket = new ProductBasket();
+        SearchEngine searchEngine = new SearchEngine(10);
 
-        Product product1 = new Product("Яблоко", 100);
-        Product product2 = new Product("Банан", 90);
-        Product product3 = new Product("Апельсин", 80);
-        Product product4 = new Product("Киви", 70);
-        Product product5 = new Product("Груша", 60);
-        Product product6 = new Product("Вишня", 50);
+        // Создание продуктов и добавление их в поисковый движок
+        Product product1 = new SimpleProduct("Яблоко", 50);
+        Product product2 = new DiscountedProduct("Банан", 80, 10);
+        Product product3 = new FixPriceProduct("Апельсин");
+        searchEngine.add(product1);
+        searchEngine.add(product2);
+        searchEngine.add(product3);
 
-        basket.addProduct(product1);
-        basket.addProduct(product2);
-        basket.addProduct(product3);
-        basket.addProduct(product4);
-        basket.addProduct(product5);
+        // Создание статей и добавление их в поисковый движок
+        Article article1 = new Article("Как выбрать яблоки", "На что обращать внимание при выборе яблок.");
+        Article article2 = new Article("Грипп и его симптомы", "Как распознать грипп и что с ним делать.");
+        searchEngine.add(article1);
+        searchEngine.add(article2);
 
-        basket.addProduct(product6);
+        // Демонстрация поиска
+        try {
+            Searchable bestMatch = searchEngine.findBestMatch("яблоки");
+            System.out.println("Лучший результат для 'яблоки': " + bestMatch.getStringRepresentation());
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
 
-        System.out.println("Содержимое корзины:");
-        basket.printProducts();
-
-        System.out.println("Общая стоимость корзины: " + basket.getTotalPrice());
-
-        System.out.println("Корзина содержит 'Яблоко': " + basket.containsProduct("Яблоко"));
-
-        System.out.println("Корзина содержит 'Персик': " + basket.containsProduct("Персик"));
-
-        basket.clearBasket();
-        System.out.println("После очистки корзины:");
-
-        basket.printProducts();
-
-        System.out.println("Общая стоимость пустой корзины: " + basket.getTotalPrice());
-
-        System.out.println("Корзина содержит 'Яблоко': " + basket.containsProduct("Яблоко"));
+        try {
+            Searchable bestMatch = searchEngine.findBestMatch("не существующий запрос");
+            System.out.println("Лучший результат для 'не существующий запрос': " + bestMatch.getStringRepresentation());
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
-
