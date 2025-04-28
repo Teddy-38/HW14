@@ -1,43 +1,33 @@
 package org.skypro.skyshop;
 
-import org.skypro.skyshop.basket.ProductBasket; import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.product.*;
+
+import java.util.List;
 
 public class App {
     public static void main(String[] args) {
         ProductBasket basket = new ProductBasket();
 
-        Product product1 = new Product("Яблоко", 100);
-        Product product2 = new Product("Банан", 90);
-        Product product3 = new Product("Апельсин", 80);
-        Product product4 = new Product("Киви", 70);
-        Product product5 = new Product("Груша", 60);
-        Product product6 = new Product("Вишня", 50);
+        Product product1 = new SimpleProduct("Яблоко", 50);
+        Product product2 = new SimpleProduct("Банан", 55);
+        Product product3 = new DiscountedProduct("Яблоко", 80, 10);
 
-        basket.addProduct(product1);
-        basket.addProduct(product2);
-        basket.addProduct(product3);
-        basket.addProduct(product4);
-        basket.addProduct(product5);
+        basket.add(product1);
+        basket.add(product2);
+        basket.add(product3);
 
-        basket.addProduct(product6);
+        List<Product> removedProducts = basket.removeByName("Яблоко");
+        System.out.println("Удаленные продукты:");
+        for (Product removed : removedProducts) {
+            System.out.println(removed);
+        }
+        basket.printBasket();
 
-        System.out.println("Содержимое корзины:");
-        basket.printProducts();
-
-        System.out.println("Общая стоимость корзины: " + basket.getTotalPrice());
-
-        System.out.println("Корзина содержит 'Яблоко': " + basket.containsProduct("Яблоко"));
-
-        System.out.println("Корзина содержит 'Персик': " + basket.containsProduct("Персик"));
-
-        basket.clearBasket();
-        System.out.println("После очистки корзины:");
-
-        basket.printProducts();
-
-        System.out.println("Общая стоимость пустой корзины: " + basket.getTotalPrice());
-
-        System.out.println("Корзина содержит 'Яблоко': " + basket.containsProduct("Яблоко"));
+        removedProducts = basket.removeByName("Груша");
+        if (removedProducts.isEmpty()) {
+            System.out.println("Список пуст");
+        }
+        basket.printBasket();
     }
 }
-
