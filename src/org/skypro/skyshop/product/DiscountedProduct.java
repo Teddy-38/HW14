@@ -1,33 +1,29 @@
 package org.skypro.skyshop.product;
 
-public class DiscountedProduct extends Product {
-    private final int basePrice;
-    private final int discountPercentage;
+public class DiscountedProduct implements Product {
+    private String name;
+    private double price;
+    private double discount;
 
-    public DiscountedProduct(String name, int basePrice, int discountPercentage) {
-        super(name);
-        if (basePrice <= 0) {
-            throw new IllegalArgumentException("Базовая цена продукта должна быть больше 0.");
-        }
-        if (discountPercentage < 0 || discountPercentage > 100) {
-            throw new IllegalArgumentException("Процент скидки должен быть от 0 до 100 включительно.");
-        }
-        this.basePrice = basePrice;
-        this.discountPercentage = discountPercentage;
+    public DiscountedProduct(String name, double price, double discount) {
+        this.name = name;
+        this.price = price;
+        this.discount = discount;
     }
 
     @Override
-    public int getPrice() {
-        return basePrice - (basePrice * discountPercentage / 100);
+    public String getName() {
+        return name;
     }
 
     @Override
-    public boolean isSpecial() {
-        return true;
+    public double getPrice() {
+        return price * (1 - discount / 100); // Логика применения скидки
     }
 
+    // Реализация метода toString
     @Override
     public String toString() {
-        return String.format("%s: %d (%d%%)", getName() , getPrice(), discountPercentage);
+        return "Скидка на продукт: " + name + ", Оригинальная цена: " + price + ", Скидка: " + discount + "%";
     }
 }
