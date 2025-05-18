@@ -1,27 +1,25 @@
 package org.skypro.skyshop.search;
 
-public class SearchEngine {
-    private final Searchable[] Searchable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-    public Searchable[] search(String string) {
-        int i = 0;
-        Searchable[] search = new Searchable[5];
+public class SearchEngine {
+    private final ArrayList<Searchable> Searchable = new ArrayList<>();
+
+    public Map<String, List<Searchable>> search(String string) {
+        Map<String, List<Searchable>> search = new TreeMap<>();
         for (Searchable searchable : Searchable) {
-            if (searchable != null && searchable.searchTerm().contains(string) && i < 5) {
-                search[i] = searchable;
-                i++;
+            if (searchable.searchTerm().toLowerCase().contains(string.toLowerCase())) {
+                search.computeIfAbsent(searchable.searchTerm(), l -> new ArrayList<>()).add(searchable);
             }
         }
         return search;
     }
 
     public void addSearchable(Searchable searchable) {
-        for (int i = 0; i < Searchable.length; i++) {
-            if (Searchable[i] == null) {
-                Searchable[i] = searchable;
-                break;
-            }
-        }
+        Searchable.add(searchable);
     }
 
     public Searchable findBestMatch(String string) throws BestResultNotFound {
@@ -29,12 +27,10 @@ public class SearchEngine {
         int maxCount = 0;
 
         for (Searchable searchable : Searchable) {
-            if (searchable != null) {
-                int count = countRepetition(searchable.searchTerm().toLowerCase(), string.toLowerCase());
-                if (count > maxCount) {
-                    maxCount = count;
-                    bestMatch = searchable;
-                }
+            int count = countRepetition(searchable.searchTerm().toLowerCase(), string.toLowerCase());
+            if (count > maxCount) {
+                maxCount = count;
+                bestMatch = searchable;
             }
         }
 
@@ -54,9 +50,5 @@ public class SearchEngine {
             index = str.indexOf(subStr, index);
         }
         return count;
-    }
-
-    public SearchEngine(int size) {
-        this.Searchable = new Searchable[size];
     }
 }

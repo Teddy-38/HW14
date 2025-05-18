@@ -8,13 +8,13 @@ import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.BestResultNotFound;
 
-import java.util.Arrays;
 
 public class App {
     public static void main(String[] args) {
-        SimpleProduct apple = new SimpleProduct("Яблоко", 40);
-        SimpleProduct potato = new SimpleProduct("Картофель", 10);
+        SimpleProduct apple = new SimpleProduct("Яблоко", 50);
+        SimpleProduct potato = new SimpleProduct("Картофель", 20);
         DiscountedProduct pasta = new DiscountedProduct("Макароны", 100, 10);
+        SimpleProduct salt = new SimpleProduct("Соль", 10);
         SimpleProduct orange = new SimpleProduct("Апельсин", 140);
         DiscountedProduct sausage = new DiscountedProduct("Колбаса", 250, 15);
         DiscountedProduct milk = new DiscountedProduct("Молоко", 90, 20);
@@ -31,10 +31,9 @@ public class App {
         basket1.addProduct(orange);
         basket2.addProduct(potato);
         basket2.addProduct(pasta);
+        basket2.addProduct(salt);
         basket2.addProduct(sausage);
 
-        System.out.println("Добавление продукта в заполненную корзину, в которой нет свободного места.");
-        basket1.addProduct(orange);
 
         System.out.println("Получение стоимости корзины с несколькими товарами.");
         System.out.printf("Итого: %s рублей\n", basket1.fullPriceBasket());
@@ -63,13 +62,20 @@ public class App {
         System.out.println("Поиск товара по имени в пустой корзине.");
         System.out.println(basket1.nameProductBasket("Яблоко"));
 
-        SearchEngine Searchable = new SearchEngine(15);
+        SearchEngine Searchable = new SearchEngine();
         Searchable.addSearchable(apple);
         Searchable.addSearchable(milk);
+        Searchable.addSearchable(apple);
+        Searchable.addSearchable(apple);
+        Searchable.addSearchable(apple);
+        Searchable.addSearchable(apple);
+        Searchable.addSearchable(apple);
+        Searchable.addSearchable(apple);
         Searchable.addSearchable(apple);
         Searchable.addSearchable(orange);
         Searchable.addSearchable(potato);
         Searchable.addSearchable(pasta);
+        Searchable.addSearchable(salt);
         Searchable.addSearchable(sausage);
         Article properMilk = new Article("Молоко", "Хорошее молоко должно быть жирным");
         Article ironApple = new Article("Яблоко", "Срез настоящего яблока быстро ржавеет");
@@ -83,8 +89,8 @@ public class App {
         System.out.println(properMilk.getStringRepresentation());
         System.out.println(ironApple.getStringRepresentation());
         System.out.println(apple.getStringRepresentation());
-        System.out.println(Arrays.toString(Searchable.search("Яблоко")));
-        System.out.println(Arrays.toString(Searchable.search("Молоко")));
+        System.out.println((Searchable.search("Яблоко")));
+        System.out.println((Searchable.search("Молоко")));
 
         System.out.println("Демонстрация исключений");
         try {
@@ -114,6 +120,19 @@ public class App {
         } finally {
             System.out.println("Демонстрация завершена");
         }
-    }
 
+        System.out.println("Демонстрация листов(мапов)");
+        basket2.printContentBasket();
+        basket2.addProduct(sausage);
+        basket2.addProduct(sausage);
+        basket2.addProduct(sausage);
+        basket2.printContentBasket();
+        System.out.println("Удаление существующего продукта");
+        basket2.removeProduct("Колбаса");
+        basket2.printContentBasket();
+        System.out.println("Удаление несуществующего продукта");
+        basket2.removeProduct("Молоко");
+        basket2.printContentBasket();
+        System.out.println("Демонстация завершена");
+    }
 }
