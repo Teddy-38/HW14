@@ -1,28 +1,62 @@
 package org.skypro.skyshop.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SearchEngine {
-    private final List<Searchable> searchableItems;
+    private final Searchable[] Searchable;
 
-    public SearchEngine() {
-        this.searchableItems = new ArrayList<>();
+    public Searchable[] search(String string) {
+        int i = 0;
+        Searchable[] search = new Searchable[5];
+        for (Searchable searchable : Searchable) {
+            if (searchable != null && searchable.searchTerm().contains(string) && i < 5) {
+                search[i] = searchable;
+                i++;
+            }
+        }
+        return search;
     }
 
-    public void add(Searchable item) {
-        searchableItems.add(item);
+    public void addSearchable(Searchable searchable) {
+        for (int i = 0; i < Searchable.length; i++) {
+            if (Searchable[i] == null) {
+                Searchable[i] = searchable;
+                break;
+            }
+        }
     }
 
-    public List<Searchable> search(String term) {
-        List<Searchable> results = new ArrayList<>();
+    public Searchable findBestMatch(String string) throws BestResultNotFound {
+        Searchable bestMatch = null;
+        int maxCount = 0;
 
-        for (Searchable item : searchableItems) {
-            if (item.getSearchTerm().toLowerCase().contains(term.toLowerCase())) {
-                results.add(item);
+        for (Searchable searchable : Searchable) {
+            if (searchable != null) {
+                int count = countRepetition(searchable.searchTerm().toLowerCase(), string.toLowerCase());
+                if (count > maxCount) {
+                    maxCount = count;
+                    bestMatch = searchable;
+                }
             }
         }
 
-        return results;
+        if (bestMatch == null) {
+            throw new BestResultNotFound("Не найдено ни одного результата поиска: " + string);
+        }
+        return bestMatch;
+    }
+
+    private int countRepetition(String str, String subStr) {
+        int count = 0;
+        int index = 0;
+        index = str.indexOf(subStr, index);
+        while (index != -1) {
+            count++;
+            index += subStr.length();
+            index = str.indexOf(subStr, index);
+        }
+        return count;
+    }
+
+    public SearchEngine(int size) {
+        this.Searchable = new Searchable[size];
     }
 }

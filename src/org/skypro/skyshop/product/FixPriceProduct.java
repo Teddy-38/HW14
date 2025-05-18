@@ -1,21 +1,24 @@
 package org.skypro.skyshop.product;
 
-public class FixPriceProduct implements Product {
-    private String name;
-    private double price; // используем double для соответствия интерфейсу
+public class FixPriceProduct extends Product {
+    private static final int fixPrice = 77;
 
-    public FixPriceProduct(String name, double price) {
-        this.name = name;
-        this.price = price;
+    public FixPriceProduct(String productName) {
+        super(productName);
     }
 
     @Override
-    public String getName() {
-        return name;
+    public int getProductPrice() {
+        return fixPrice;
     }
 
     @Override
-    public double getPrice() {
-        return price; // возвращаем double
+    public String toString() {
+        return getProductName() + "(c фиксированной ценой): " + fixPrice + " рублей ";
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 }
