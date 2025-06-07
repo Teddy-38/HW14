@@ -1,18 +1,15 @@
 package org.skypro.skyshop.search;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class SearchEngine {
-    private final ArrayList<Searchable> Searchable = new ArrayList<>();
+    private final Set<Searchable> Searchable = new HashSet<>();
 
-    public Map<String, List<Searchable>> search(String string) {
-        Map<String, List<Searchable>> search = new TreeMap<>();
+    public Set<Searchable> search(String keyWord) {
+        Set<Searchable> search = new TreeSet<>(new SearchableComparator());
         for (Searchable searchable : Searchable) {
-            if (searchable.searchTerm().toLowerCase().contains(string.toLowerCase())) {
-                search.computeIfAbsent(searchable.searchTerm(), l -> new ArrayList<>()).add(searchable);
+            if (searchable.searchTerm().toLowerCase().contains(keyWord.toLowerCase())) {
+                search.add(searchable);
             }
         }
         return search;
@@ -22,12 +19,12 @@ public class SearchEngine {
         Searchable.add(searchable);
     }
 
-    public Searchable findBestMatch(String string) throws BestResultNotFound {
+    public Searchable findBestMatch(String keyWord) throws BestResultNotFound {
         Searchable bestMatch = null;
         int maxCount = 0;
 
         for (Searchable searchable : Searchable) {
-            int count = countRepetition(searchable.searchTerm().toLowerCase(), string.toLowerCase());
+            int count = countRepetition(searchable.searchTerm().toLowerCase(), keyWord.toLowerCase());
             if (count > maxCount) {
                 maxCount = count;
                 bestMatch = searchable;
@@ -35,7 +32,7 @@ public class SearchEngine {
         }
 
         if (bestMatch == null) {
-            throw new BestResultNotFound("Не найдено ни одного результата поиска: " + string);
+            throw new BestResultNotFound("Не найдено ни одного результата поиска: " + keyWord);
         }
         return bestMatch;
     }
