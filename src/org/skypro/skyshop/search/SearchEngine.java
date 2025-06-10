@@ -1,29 +1,26 @@
 package org.skypro.skyshop.search;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SearchEngine {
-    private final Set<Searchable> Searchable = new HashSet<>();
+    private final Set<Searchable> searchableSet = new HashSet<>();
 
     public Set<Searchable> search(String keyWord) {
-        Set<Searchable> search = new TreeSet<>(new SearchableComparator());
-        for (Searchable searchable : Searchable) {
-            if (searchable.searchTerm().toLowerCase().contains(keyWord.toLowerCase())) {
-                search.add(searchable);
-            }
-        }
-        return search;
+        return searchableSet.stream()
+                .filter(searchable -> searchable.searchTerm().toLowerCase().contains(keyWord.toLowerCase()))
+                .collect(Collectors.toCollection(() -> new TreeSet<>(new SearchableComparator())));
     }
 
     public void addSearchable(Searchable searchable) {
-        Searchable.add(searchable);
+        searchableSet.add(searchable);
     }
 
     public Searchable findBestMatch(String keyWord) throws BestResultNotFound {
         Searchable bestMatch = null;
         int maxCount = 0;
 
-        for (Searchable searchable : Searchable) {
+        for (Searchable searchable : searchableSet) {
             int count = countRepetition(searchable.searchTerm().toLowerCase(), keyWord.toLowerCase());
             if (count > maxCount) {
                 maxCount = count;
