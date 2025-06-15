@@ -1,20 +1,42 @@
 package org.skypro.skyshop.article;
 
-import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.search.Searchable;
 
-public class Article implements Product {
-    private String name;
-    private double price;
+import java.util.Objects;
 
-    // Конструктор и другие методы...
+public class Article implements Searchable {
+    private final String title;
+    private final String text;
 
-    @Override
-    public String getName() {
-        return name;
+    public Article(String title, String text) {
+        this.title = title;
+        this.text = text;
     }
 
     @Override
-    public double getPrice() {
-        return price;
+    public String toString() {
+        return "Название статьи: " + title + ". Текст статьи: " + text + ".";
+    }
+
+    @Override
+    public String searchTerm() {
+        return toString();
+    }
+
+    @Override
+    public String getContentType() {
+        return "Article";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(title, article.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(title);
     }
 }
